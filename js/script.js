@@ -22,13 +22,21 @@ const sizes = {
 // CAMERA
 const camera = new THREE.PerspectiveCamera(
 	35,
-	size.width / sizes.height,
+	sizes.width / sizes.height,
 	0.1,
 	1000
 )
 
 camera.position.z = 5
 scene.add(camera)
+
+// LIGHT
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
+scene.add(ambientLight)
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+directionalLight.position.set(1, 2, 0)
+scene.add(directionalLight)
 
 // RENDERER
 const renderer = new THREE.WebGLRenderer({
@@ -41,3 +49,21 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 renderer.render(scene, camera)
+
+// ANIMATE
+const clock = new THREE.Clock()
+let lastElapsedTime = 0
+
+const tick = () => {
+	const elapsedTime = clock.getElapsedTime()
+	const deltaTime = elapsedTime - lastElapsedTime
+	lastElapsedTime = elapsedTime
+
+	cube.rotation.y = Math.sin(elapsedTime)
+
+	renderer.render(scene, camera)
+
+	window.requestAnimationFrame(tick)
+}
+
+tick()
