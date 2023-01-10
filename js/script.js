@@ -4,14 +4,24 @@ const canvas = document.querySelector('canvas.webgl')
 // SCENE
 const scene = new THREE.Scene()
 
-// test cube
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 1)
-const cubeMaterial = new THREE.MeshBasicMaterial({
-	color: 0xff0000,
-})
-const cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
+// GLTF Loader
 
-scene.add(cube)
+let donut = null
+
+const gltfLoader = new THREE.GLTFLoader()
+
+gltfLoader.load('./assets/donut/scene.gltf', (gltf) => {
+	donut = gltf.scene
+
+	donut.rotation.y = 1.5
+	donut.position.x = Math.PI * 0.2
+	donut.rotation.z = Math.PI * 0.15
+
+	const radius = 8.5
+
+	donut.scale.set(radius, radius, radius)
+	scene.add(donut)
+})
 
 // SIZES
 const sizes = {
@@ -59,7 +69,9 @@ const tick = () => {
 	const deltaTime = elapsedTime - lastElapsedTime
 	lastElapsedTime = elapsedTime
 
-	cube.rotation.y = Math.sin(elapsedTime)
+	if (!!donut) {
+		donut.position.y = Math.sin(elapsedTime * 0.5) * 0.1 - 0.1
+	}
 
 	renderer.render(scene, camera)
 
