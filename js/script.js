@@ -13,14 +13,54 @@ const gltfLoader = new THREE.GLTFLoader()
 gltfLoader.load('./assets/donut/scene.gltf', (gltf) => {
 	donut = gltf.scene
 
-	donut.rotation.y = 1.5
-	donut.position.x = Math.PI * 0.2
-	donut.rotation.z = Math.PI * 0.15
+	donut.rotation.y = 1.2
+	donut.position.x = Math.PI * 0.4
+	donut.rotation.z = Math.PI * 0.25
 
 	const radius = 8.5
 
 	donut.scale.set(radius, radius, radius)
 	scene.add(donut)
+})
+
+// SCROLL
+const transformDonut = [
+	{
+		rotationY: 1.2,
+		positionX: 1.5,
+	},
+	{
+		rotationY: 2.5,
+		positionX: -1.5,
+	},
+	{
+		rotationY: 1.5,
+		positionX: 0,
+	},
+]
+
+let scrollY = window.scrollY
+let currentSection = 0
+window.addEventListener('scroll', () => {
+	scrollY = window.scrollY
+	const newSection = Math.round(scrollY / sizes.height)
+
+	if (newSection != currentSection) {
+		currentSection = newSection
+
+		if (!!donut) {
+			gsap.to(donut.rotation, {
+				duration: 1.25,
+				ease: 'power2.inOut',
+				y: transformDonut[currentSection].rotationY,
+			})
+			gsap.to(donut.position, {
+				duration: 1.25,
+				ease: 'power2.inOut',
+				x: transformDonut[currentSection].positionX,
+			})
+		}
+	}
 })
 
 // SIZES
