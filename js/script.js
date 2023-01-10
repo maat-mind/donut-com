@@ -63,6 +63,11 @@ window.addEventListener('scroll', () => {
 	}
 })
 
+// ON RELOAD
+window.onbeforeunload = function () {
+	window.scrollTo(0, 0)
+}
+
 // SIZES
 const sizes = {
 	width: window.innerWidth,
